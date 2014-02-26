@@ -1839,38 +1839,31 @@ reduces them without incurring seq initialization"
 
 (defn hash-combine [seed hash]
   ; a la boost
-  (bit-xor seed (+ hash 0x9e3779b9
-                   (bit-shift-left seed 6)
-                   (bit-shift-right seed 2))))
+  (bit-xor seed
+           (bit-or (+ (bit-or (+ (bit-or (+ hash (bit-or 0x9e3779b9 0)) 0)
+                                 (bit-shift-left seed 6)) 0)
+                      (bit-shift-right seed 2)) 0)))
 
-(defn- hash-coll [coll]
-  (if (seq coll)
-    (loop [res (hash (first coll)) s (next coll)]
-      (if (nil? s)
-        res
-        (recur (hash-combine res (hash (first s))) (next s))))
-    0))
+(defn hash-unordered [xs]
+  (loop [n 0 hsh 0 xs (seq xs)]
+    (if (nil? xs)
+      (murmur3/mix-coll-hash hsh n)
+      (recur (inc n) (bit-or (+ hsh (hash (first xs))) 0) (next xs)))))
+
+(defn hash-ordered [xs]
+  (loop [n 0 hsh 1 xs (seq xs)]
+    (if (nil? xs)
+      (murmur3/mix-coll-hash hsh n)
+      (recur (inc n) (bit-or (+ (murmur3/imul 31 hsh) (hash (first xs))) 0)
+             (next xs)))))
 
 (declare key val)
 
-(defn- hash-imap [m]
-  ;; a la clojure.lang.APersistentMap
-  (loop [h 0 s (seq m)]
-    (if s
-      (let [e (first s)]
-        (recur (js-mod (+ h (bit-xor (hash (key e)) (hash (val e))))
-                    4503599627370496)
-               (next s)))
-      h)))
+(def ^:private hash-coll hash-ordered)
 
-(defn- hash-iset [s]
-  ;; a la clojure.lang.APersistentSet
-  (loop [h 0 s (seq s)]
-    (if s
-      (let [e (first s)]
-        (recur (js-mod (+ h (hash e)) 4503599627370496)
-               (next s)))
-      h)))
+(def ^:private hash-imap hash-unordered)
+
+(def ^:private hash-iset hash-unordered)
 
 (declare name chunk-first chunk-rest)
 
