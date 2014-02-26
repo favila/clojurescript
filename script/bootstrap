@@ -11,15 +11,11 @@ TREADER_RELEASE="0.8.3"
 mkdir -p lib
 
 echo "Fetching Clojure..."
-curl -O -s http://repo1.maven.org/maven2/org/clojure/clojure/$CLOJURE_RELEASE/clojure-$CLOJURE_RELEASE.zip
-unzip -qu clojure-$CLOJURE_RELEASE.zip
+curl -O -s http://repo1.maven.org/maven2/org/clojure/clojure/$CLOJURE_RELEASE/clojure-$CLOJURE_RELEASE.jar
 echo "Copying clojure-$CLOJURE_RELEASE/clojure-$CLOJURE_RELEASE.jar to lib/clojure.jar..."
-cp clojure-$CLOJURE_RELEASE/clojure-$CLOJURE_RELEASE.jar lib/clojure.jar
-
-echo "Cleaning up Clojure directory..."
-rm -rf clojure-$CLOJURE_RELEASE/
+cp clojure-$CLOJURE_RELEASE.jar lib/clojure.jar
 echo "Cleaning up Clojure archive..."
-rm clojure-$CLOJURE_RELEASE.zip
+rm clojure-$CLOJURE_RELEASE.jar
 
 echo "Fetching data.json..."
 curl -O -s http://repo1.maven.org/maven2/org/clojure/data.json/$DJSON_RELEASE/data.json-$DJSON_RELEASE.jar
