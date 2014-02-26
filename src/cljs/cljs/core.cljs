@@ -2092,8 +2092,8 @@ reduces them without incurring seq initialization"
     ; This was checking if _hash == -1, should it stay that way?
     (if (nil? _hash)
       (do
-        (set! _hash (+ (hash-combine (hash ns) (hash name))
-                        0x9e3779b9))
+        (set! _hash (bit-or (+ (hash-combine (hash ns) (hash name))
+                                (bit-or 0x9e3779b9 0)) 0))
         _hash)
       _hash))
 
