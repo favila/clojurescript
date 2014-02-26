@@ -1089,7 +1089,7 @@ reduces them without incurring seq initialization"
 (def string-hash-cache-count 0)
 
 (defn add-to-string-hash-cache [k]
-  (let [h (goog.string/hashCode k)]
+  (let [h (murmur3/hash-string k)]
     (aset string-hash-cache k h)
     (set! string-hash-cache-count (inc string-hash-cache-count))
     h))
