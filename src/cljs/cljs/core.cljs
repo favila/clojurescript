@@ -407,7 +407,7 @@
   (instance? Symbol x))
 
 (defn- hash-symbol [sym]
-  (hash-combine (hash (.-ns sym)) (hash (.-name sym))))
+  (hash-combine (hash (.-name sym)) (hash (.-ns sym))))
 
 (defn- compare-symbols [a b]
   (cond
@@ -2092,8 +2092,8 @@ reduces them without incurring seq initialization"
     ; This was checking if _hash == -1, should it stay that way?
     (if (nil? _hash)
       (do
-        (set! _hash (bit-or (+ (hash-combine (hash ns) (hash name))
-                                (bit-or 0x9e3779b9 0)) 0))
+        (set! _hash (bit-or (+ (hash-combine (hash name) (hash ns))
+                               (bit-or 0x9e3779b9 0)) 0))
         _hash)
       _hash))
 
