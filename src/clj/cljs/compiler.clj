@@ -218,10 +218,11 @@
                        (str ns "/" name)
                        name))
       (emits ",")
-      (emit-constant (+ (clojure.lang.Util/hashCombine
-                          (unchecked-int (goog-string-hash ns))
-                          (unchecked-int (goog-string-hash name)))
-                         0x9e3779b9))
+      (emit-constant (unchecked-add-int
+                       (clojure.lang.Util/hashCombine
+                         (clojure.lang.Util/hasheq name)
+                         (clojure.lang.Util/hasheq ns))
+                       (unchecked-int 0x9e3779b9)))
       (emits ")"))))
 
 (defmethod emit-constant clojure.lang.Symbol [x]
@@ -238,8 +239,8 @@
     (emit-constant symstr)
     (emits ",")
     (emit-constant (clojure.lang.Util/hashCombine
-                     (unchecked-int (goog-string-hash ns))
-                     (unchecked-int (goog-string-hash name))))
+                     (clojure.lang.Util/hasheq name)
+                     (clojure.lang.Util/hasheq ns)))
     (emits ",")
     (emit-constant nil)
     (emits ")")))
