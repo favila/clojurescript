@@ -1108,8 +1108,8 @@ reduces them without incurring seq initialization"
     (implements? IHash o)
     (-hash ^not-native o)
 
-    (number? o)
-    (js-mod (.floor js/Math o) 2147483647)
+    (number? o)  ;; FIXME: different hashes for int vs double?
+    (murmur3/hash-long o)
 
     (true? o) 1
 
