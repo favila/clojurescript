@@ -2216,5 +2216,11 @@
   (assert (= "0atrue:key/wordsymb/olfalse[1 2 3 4]1234.56789"
              (str 0 "a" true nil :key/word 'symb/ol false [1 2 3 4] 1234.5678 0x09)))
 
+  ;; CLJS-807
+  (assert (= -1 -1N))
+  (assert (= 9.007199254740996E15 9007199254740995N))
+  (assert (= 1.5 1.5M))
+  (assert (= 4.9E-324 5E-324M))
+
   :ok
   )
